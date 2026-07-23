@@ -1,5 +1,6 @@
 'use client';
 
+import { AccountEffects } from '@/components/AccountEffects';
 import { wagmiConfig } from '@/lib/wagmi-config';
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
@@ -15,7 +16,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
     return (
         <WagmiProvider config={wagmiConfig}>
             <QueryClientProvider client={queryClient}>
-                <RainbowKitProvider>{children}</RainbowKitProvider>
+                <RainbowKitProvider>
+                    <AccountEffects />
+                    {children}
+                    </RainbowKitProvider>
             </QueryClientProvider>
         </WagmiProvider>
     );
