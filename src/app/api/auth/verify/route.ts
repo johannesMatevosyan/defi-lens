@@ -53,6 +53,7 @@ export async function POST(request: NextRequest) {
     session.siwe = {
         address: siweMessage.address!,
         chainId: siweMessage.chainId!,
+        issuedAt: Date.now(),
     };
     await session.save();
 

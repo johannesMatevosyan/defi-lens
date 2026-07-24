@@ -3,12 +3,17 @@
 
 import { useSession } from '@/hooks/useSession';
 import { buildSiweMessage } from '@/lib/siwe';
+import { wagmiConfig } from '@/lib/wagmi-config';
 import { useState } from 'react';
-import { useAccount, useSignMessage } from 'wagmi';
+import { useAccount, useSignMessage, useSwitchChain } from 'wagmi';
+import { base } from 'wagmi/chains';
+
+const supportedChainIds = wagmiConfig.chains.map((c) => c.id);
 
 export function SignInButton() {
     const { address, chainId, isConnected } = useAccount();
     const { signMessageAsync } = useSignMessage();
+    const { switchChainAsync } = useSwitchChain();
     const [status, setStatus] = useState<'idle' | 'signing' | 'error'>('idle');
     const { isAuthenticated, isLoading, refetch } = useSession();
 
@@ -18,12 +23,19 @@ export function SignInButton() {
         setStatus('signing');
 
         try {
+            let effectiveChainId = chainId;
+
+            if (!supportedChainIds.includes(chainId as typeof wagmiConfig.chains[number]['id'])) {
+                const result = await switchChainAsync({
+                    chainId: base.id as typeof wagmiConfig.chains[number]['id'],
+                });
+                effectiveChainId = result.id;
+            }
+
             const nonceRes = await fetch('/api/auth/nonce');
             const { nonce } = await nonceRes.json();
 
-            const message = buildSiweMessage({ address, chainId, nonce });
-
-            // This is the line that pops the wallet's signing prompt
+            const message = buildSiweMessage({ address, chainId: effectiveChainId, nonce });
             const signature = await signMessageAsync({ message });
 
             const verifyRes = await fetch('/api/auth/verify', {
@@ -36,7 +48,7 @@ export function SignInButton() {
                 throw new Error('Verification failed');
             }
 
-            await refetch(); // pulls the new session, flips isAuthenticated to true
+            await refetch();
             setStatus('idle');
         } catch (err) {
             console.error('Sign-in failed:', err);
