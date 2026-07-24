@@ -2,6 +2,7 @@
 'use client';
 
 import { ConnectWalletButton } from './ConnectWalletButton';
+import { SignInButton } from './SignInButton';
 import { WalletInfo } from './WalletInfo';
 
 export function Header() {
@@ -9,6 +10,7 @@ export function Header() {
     <header className="flex items-center justify-between p-4 border-b">
       <span className="font-semibold">DeFi Lens</span>
       <WalletInfo />
+      <SignInButton />
       <ConnectWalletButton />
     </header>
   );
