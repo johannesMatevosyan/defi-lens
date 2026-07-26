@@ -15,12 +15,12 @@ async function fetchTokenBalances(address: string, chainId: number): Promise<Tok
 export function useTokenBalances(chainId: number) {
     const { address, isConnected } = useAccount();
 
-    const testAddress = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045';
+    // const testAddress = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045';
 
     return useQuery({
-        queryKey: ['tokenBalances', chainId, testAddress],
-        queryFn: () => fetchTokenBalances(testAddress!, chainId),
-        enabled: isConnected && !!testAddress,
+        queryKey: ['tokenBalances', chainId, address],
+        queryFn: () => fetchTokenBalances(address!, chainId),
+        enabled: isConnected && !!address,
         staleTime: chainId === 8453 ? 2_000 : 12_000, // Base vs Ethereum block time, from Step 1
     });
 }
