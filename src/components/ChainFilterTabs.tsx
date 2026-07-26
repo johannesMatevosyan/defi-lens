@@ -4,7 +4,6 @@
 import { SelectedChainFilter, usePortfolioUIStore } from '@/lib/stores/portfolio-ui-store';
 
 const CHAINS: { value: SelectedChainFilter; label: string }[] = [
-  { value: 'all', label: 'All' },
   { value: 8453, label: 'Base' },
   { value: 1, label: 'Ethereum' },
 ];
