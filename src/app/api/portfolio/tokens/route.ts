@@ -1,5 +1,5 @@
 // src/app/api/portfolio/tokens/route.ts
-import type { Token } from '@/lib/portfolio/types';
+import { getTokenDataViaMulticall } from '@/lib/portfolio/multicall-adapter';
 import { NextRequest, NextResponse } from 'next/server';
 
 const ALCHEMY_NETWORK_BY_CHAIN_ID: Record<number, string> = {
@@ -33,16 +33,17 @@ export async function GET(request: NextRequest) {
     const alchemyUrl = `https://${network}.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`;
 
     try {
+        // fitrst call
         const balancesRes = await fetch(alchemyUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            jsonrpc: '2.0',
-            id: 1,
-            method: 'alchemy_getTokenBalances',
-            params: [address],
-        }),
-        signal: AbortSignal.timeout(8000),
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                jsonrpc: '2.0',
+                id: 1,
+                method: 'alchemy_getTokenBalances',
+                params: [address],
+            }),
+            signal: AbortSignal.timeout(8000),
         });
 
         // Read the body exactly ONCE, as text, then parse it ourselves.
@@ -52,8 +53,8 @@ export async function GET(request: NextRequest) {
         const balancesData = JSON.parse(rawText);
 
         if (!balancesData.result) {
-        console.error('Alchemy returned no result field:', balancesData);
-        return NextResponse.json({ error: 'Alchemy API error', details: balancesData }, { status: 502 });
+            console.error('Alchemy returned no result field:', balancesData);
+            return NextResponse.json({ error: 'Alchemy API error', details: balancesData }, { status: 502 });
         }
 
         const rawBalances: AlchemyTokenBalance[] = balancesData.result.tokenBalances.filter(
@@ -61,30 +62,10 @@ export async function GET(request: NextRequest) {
             t.tokenBalance !== '0x0000000000000000000000000000000000000000000000000000000000000000'
         );
 
-        const tokens: Token[] = await Promise.all(
-        rawBalances.map(async (balance): Promise<Token> => {
-            const metaRes = await fetch(alchemyUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    jsonrpc: '2.0',
-                    id: 1,
-                    method: 'alchemy_getTokenMetadata',
-                    params: [balance.contractAddress],
-                }),
-            });
-            const metaData = await metaRes.json();
-            const meta: AlchemyTokenMetadata = metaData.result;
-
-            return {
-                contractAddress: balance.contractAddress as `0x${string}`,
-                symbol: meta.symbol ?? 'UNKNOWN',
-                name: meta.name ?? 'Unknown Token',
-                decimals: meta.decimals ?? 18,
-                balance: BigInt(balance.tokenBalance),
-                chainId,
-            };
-        })
+        const tokens = await getTokenDataViaMulticall(
+            rawBalances.map((b) => b.contractAddress as `0x${string}`),
+            address as `0x${string}`,
+            chainId
         );
 
         return NextResponse.json({
