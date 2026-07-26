@@ -18,23 +18,15 @@ export function WalletInfo() {
     chainId: mainnet.id,
   });
 
-  console.log('resolved ENS name:', ensName);
-
   const { data: ensAvatar } = useEnsAvatar({
     name: ensName ?? undefined,
     chainId: mainnet.id,
   });
 
-  console.log('resolved ENS avatar:', ensAvatar);
-
   const { data: balance } = useBalance({
     address,
     chainId: chain?.id,
   });
-
-    console.log('resolved balance:', balance);
-    console.log('resolved isConnected: ', isConnected);
-    console.log('resolved address:  ', address);
 
   if (!isConnected || !address) return null;
 
