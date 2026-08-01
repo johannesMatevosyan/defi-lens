@@ -1,6 +1,9 @@
 'use client';
 
 import { AccountEffects } from '@/components/AccountEffects';
+import { FakeTransactionTester } from '@/components/FakeTransactionTester';
+import { TransactionHydrator } from '@/components/TransactionHydrator';
+import { TransactionList } from '@/components/TransactionList';
 import { wagmiConfig } from '@/lib/wagmi-config';
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
@@ -43,6 +46,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
             <QueryClientProvider client={queryClient}>
                 <RainbowKitProvider>
                     <AccountEffects />
+                    <TransactionHydrator />
+                    <FakeTransactionTester />
+                    <TransactionList />
                     {children}
                 </RainbowKitProvider>
                 {mounted ? (
