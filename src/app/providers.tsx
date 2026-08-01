@@ -1,7 +1,6 @@
 'use client';
 
 import { AccountEffects } from '@/components/AccountEffects';
-import { FakeTransactionTester } from '@/components/FakeTransactionTester';
 import { TransactionHydrator } from '@/components/TransactionHydrator';
 import { TransactionList } from '@/components/TransactionList';
 import { wagmiConfig } from '@/lib/wagmi-config';
@@ -47,7 +46,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
                 <RainbowKitProvider>
                     <AccountEffects />
                     <TransactionHydrator />
-                    <FakeTransactionTester />
                     <TransactionList />
                     {children}
                 </RainbowKitProvider>
