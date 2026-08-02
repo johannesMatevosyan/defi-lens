@@ -16,6 +16,11 @@ export function TransactionList() {
         <div className="space-y-2">
             {transactions.map((tx) => {
                 const explorerUrl = tx.hash ? getExplorerTxUrl(tx.chainId, tx.hash) : null;
+
+                {tx.status === 'failed' && tx.errorMessage && (
+                    <div className="text-xs text-red-600">{tx.errorMessage}</div>
+                )}
+
                 return (
                     <div key={tx.id} className="flex items-center justify-between rounded-lg border p-3">
                         <div>
