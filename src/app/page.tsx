@@ -1,5 +1,7 @@
 import { ChainFilterTabs } from "@/components/ChainFilterTabs";
 import { PortfolioList } from "@/components/PortfolioList";
+import { SwapHistoryList } from "@/components/SwapHistoryList";
+import { TransactionList } from "@/components/TransactionList";
 import Image from "next/image";
 
 export default function Home() {
@@ -43,8 +45,12 @@ export default function Home() {
         </div>
         <br />
         <div className="w-full">
-          <ChainFilterTabs />
-          <PortfolioList />
+            <ChainFilterTabs />
+            <PortfolioList />
+            <TransactionList />
+            <div className="mt-8 p-4 border rounded-lg border-zinc-300 dark:border-zinc-700 text-center">
+              <SwapHistoryList />
+            </div>
         </div>
       </main>
     </div>

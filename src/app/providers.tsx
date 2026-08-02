@@ -1,9 +1,7 @@
 'use client';
 
 import { AccountEffects } from '@/components/AccountEffects';
-import { SimulateTransferTester } from '@/components/SimulateTransferTester';
 import { TransactionHydrator } from '@/components/TransactionHydrator';
-import { TransactionList } from '@/components/TransactionList';
 import { wagmiConfig } from '@/lib/wagmi-config';
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
@@ -47,8 +45,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
                 <RainbowKitProvider>
                     <AccountEffects />
                     <TransactionHydrator />
-                    <SimulateTransferTester />
-                    <TransactionList />
                     {children}
                 </RainbowKitProvider>
                 {mounted ? (
