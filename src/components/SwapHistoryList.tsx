@@ -9,7 +9,6 @@ import { useAccount } from 'wagmi';
 
 export function SwapHistoryList() {
     const { address } = useAccount();
-    // const testAddress = '0xb01caea8c6c47bbf4f4b4c5080ca642043359c2e';
     const { swaps, loadMore, hasMore, isLoading } = useSwapHistoryPaginated(address);
 
     if (isLoading && swaps.length === 0) {
