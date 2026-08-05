@@ -56,7 +56,9 @@ export function DefiTvlHistoryChart() {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="date" tickFormatter={formatDate} minTickGap={40} />
                 <YAxis tickFormatter={formatTvl} width={60} />
-                <Tooltip labelFormatter={formatDate} formatter={(value: number) => formatTvl(value)} />
+                <Tooltip
+                    labelFormatter={(label: any) => typeof label === 'number' ? formatDate(label) : ''}
+                    formatter={(value: any) => value !== undefined ? formatTvl(value as number) : null} />
                 <Line type="monotone" dataKey="tvl" stroke="#4f46e5" dot={false} strokeWidth={2} />
                 </LineChart>
             </ResponsiveContainer>

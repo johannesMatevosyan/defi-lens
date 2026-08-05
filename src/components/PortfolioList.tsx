@@ -3,8 +3,11 @@
 
 import { useTokenBalances } from '@/hooks/useTokenBalances';
 import { useTokenPrices } from '@/hooks/useTokenPrices';
+import { saveTodaysPortfolioValue } from '@/lib/cache/portfolio-history-db';
 import { usePortfolioUIStore } from '@/lib/stores/portfolio-ui-store';
+import { useEffect } from 'react';
 import { formatUnits } from 'viem';
+import { useAccount } from 'wagmi';
 
 export function PortfolioList() {
     const selectedChain = usePortfolioUIStore((state) => state.selectedChain);
@@ -47,6 +50,14 @@ export function PortfolioList() {
         const formatted = Number(formatUnits(token.balance, token.decimals));
         return sum + formatted * price;
     }, 0);
+
+    const { address } = useAccount();
+
+    useEffect(() => {
+    if (address && totalUsd > 0) {
+        saveTodaysPortfolioValue(address, totalUsd);
+    }
+    }, [address, totalUsd]);
 
     return (
         <div className="py-4">
