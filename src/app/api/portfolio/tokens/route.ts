@@ -13,13 +13,6 @@ interface AlchemyTokenBalance {
   tokenBalance: string;
 }
 
-interface AlchemyTokenMetadata {
-  decimals: number | null;
-  logo: string | null;
-  name: string | null;
-  symbol: string | null;
-}
-
 export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const address = searchParams.get('address');
