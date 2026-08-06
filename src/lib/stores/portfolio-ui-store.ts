@@ -8,7 +8,7 @@ const maybeDevtools: typeof zustandDevtools =
         : ((initializer: any) => initializer) as typeof zustandDevtools;
 
 export type ViewMode = 'list' | 'grid';
-export type SelectedChainFilter = 8453 | 1;
+export type SelectedChainFilter = 'all' | 8453 | 1;
 
 interface PendingTransaction {
     hash: `0x${string}`;
@@ -32,7 +32,7 @@ interface PortfolioUIState {
 export const usePortfolioUIStore = create<PortfolioUIState>()(
     maybeDevtools(
         (set) => ({
-            selectedChain: 8453, // was 'all' — Base is now the real default
+            selectedChain: 'all', //'all 'is now default
             selectedCurrency: 'usd',
             viewMode: 'list',
             hideZeroBalances: true,
@@ -44,9 +44,9 @@ export const usePortfolioUIStore = create<PortfolioUIState>()(
                 set((state) => ({ hideZeroBalances: !state.hideZeroBalances }), false, 'toggleHideZeroBalances'),
             addPendingTransaction: (tx) =>
                 set(
-                (state) => ({ pendingTransactions: [...state.pendingTransactions, tx] }),
-                false,
-                'addPendingTransaction'
+                    (state) => ({ pendingTransactions: [...state.pendingTransactions, tx] }),
+                    false,
+                    'addPendingTransaction'
                 ),
             updateTransactionStatus: (hash, status) =>
                 set(

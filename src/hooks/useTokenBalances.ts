@@ -6,8 +6,9 @@ import type { Token } from '@/lib/portfolio/types';
 import { useQuery } from '@tanstack/react-query';
 import { useAccount } from 'wagmi';
 
-async function fetchTokenBalances(address: string, chainId: number): Promise<Token[]> {
-    const cacheKey = `tokens-${address}-${chainId}`;
+async function fetchTokenBalances(address: string, chainIdNumber: string | number): Promise<Token[]> {
+    const cacheKey = `tokens-${address}-${chainIdNumber}`;
+    const chainId = typeof chainIdNumber === 'string' ? parseInt(chainIdNumber, 10) : chainIdNumber;
 
     // Try IndexedDB first — this survives page reloads and closed tabs,
     // unlike TanStack Query's in-memory cache which resets on refresh.

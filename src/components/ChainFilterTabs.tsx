@@ -4,8 +4,9 @@
 import { SelectedChainFilter, usePortfolioUIStore } from '@/lib/stores/portfolio-ui-store';
 
 const CHAINS: { value: SelectedChainFilter; label: string }[] = [
-  { value: 8453, label: 'Base' },
-  { value: 1, label: 'Ethereum' },
+    { value: 'all', label: 'All' },
+    { value: 8453, label: 'Base' },
+    { value: 1, label: 'Ethereum' },
 ];
 
 export function ChainFilterTabs() {

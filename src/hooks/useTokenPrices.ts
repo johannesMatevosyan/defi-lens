@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 
 async function fetchTokenPrices(
   contractAddresses: string[],
-  chainId: number
+  chainId: string | number
 ): Promise<Record<string, number | null>> {
     const res = await fetch('/api/portfolio/prices', {
         method: 'POST',
@@ -18,7 +18,7 @@ async function fetchTokenPrices(
     return data.prices;
 }
 
-export function useTokenPrices(contractAddresses: string[], chainId: number) {
+export function useTokenPrices(contractAddresses: string[], chainId: string | number) {
     return useQuery({
         queryKey: ['tokenPrices', chainId, contractAddresses.sort().join(',')],
         queryFn: () => fetchTokenPrices(contractAddresses, chainId),

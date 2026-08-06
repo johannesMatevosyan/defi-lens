@@ -1,5 +1,6 @@
 // src/app/page.tsx
 import { AssetAllocationChart } from '@/components/AssetAllocationChart';
+import { ChainBreakdownSection } from '@/components/ChainBreakdownSection';
 import { ChainFilterTabs } from '@/components/ChainFilterTabs';
 import { DefiTvlHistoryChart } from '@/components/DefiTvlHistoryChart';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
@@ -39,6 +40,11 @@ export default function Home() {
         <h2 className="text-lg font-semibold mt-8 mb-2">Asset Allocation</h2>
         <ErrorBoundary fallbackMessage="Couldn't load your asset allocation.">
           <AssetAllocationChart />
+        </ErrorBoundary>
+
+        <h2 className="text-lg font-semibold mt-8 mb-2">Holdings by Chain</h2>
+        <ErrorBoundary fallbackMessage="Couldn't load chain breakdown.">
+          <ChainBreakdownSection />
         </ErrorBoundary>
       </main>
     </div>
