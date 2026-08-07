@@ -1,4 +1,5 @@
 import { Header } from "@/components/Header";
+import { ToastContainer } from "@/components/ToastContainer";
 import { WrongNetworkBanner } from "@/components/WrongNetworkBanner";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -34,6 +35,7 @@ export default function RootLayout({
             <body suppressHydrationWarning className="min-h-full flex flex-col">
                 <Providers>
                     <Header />
+                    <ToastContainer />
                     <WrongNetworkBanner />
                     {children}
                 </Providers>
