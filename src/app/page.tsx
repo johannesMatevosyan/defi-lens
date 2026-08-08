@@ -8,7 +8,7 @@ import { PortfolioHistoryChart } from '@/components/PortfolioHistoryChart';
 import { PortfolioList } from '@/components/PortfolioList';
 import { ProtocolTvlChart } from '@/components/ProtocolTvlChart';
 import { SwapHistoryList } from '@/components/SwapHistoryList';
-
+import { TransferForm } from '@/components/TransferForm';
 export default function Home() {
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
@@ -21,6 +21,9 @@ export default function Home() {
         <ErrorBoundary fallbackMessage="Couldn't load your swap history.">
           <SwapHistoryList />
         </ErrorBoundary>
+
+        <h2 className="text-lg font-semibold mt-8 mb-2">Send Test Tokens</h2>
+        <TransferForm tokenAddress="0x317d0B27A43d45C68dA407595Be0eBB3C0cc7310" />
 
         <h2 className="text-lg font-semibold mt-8 mb-2">Your Portfolio Value Over Time</h2>
         <ErrorBoundary fallbackMessage="Couldn't load portfolio history chart.">

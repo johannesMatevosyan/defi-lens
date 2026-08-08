@@ -4,6 +4,7 @@
 import { useToastStore } from '@/lib/stores/toast-store';
 import { useTransactionStore } from '@/lib/stores/transaction-store';
 import { getAllowance } from '@/lib/transactions/allowance';
+import { TRANSACTION_CHAIN_ID } from '@/lib/transactions/constants';
 import { parseTransactionError } from '@/lib/transactions/parse-error';
 import { useEffect, useState } from 'react';
 import { erc20Abi, formatUnits, maxUint256 } from 'viem';
@@ -47,7 +48,7 @@ export function ApprovalFlow({
 
             const amountToApprove = approvalMode === 'infinite' ? maxUint256 : requiredAmount;
             const id = startTransaction({
-            chainId: 84532,
+            chainId: TRANSACTION_CHAIN_ID,
             description: `Approve ${tokenSymbol} for spending`,
         });
 
@@ -58,6 +59,7 @@ export function ApprovalFlow({
                 abi: erc20Abi,
                 functionName: 'approve',
                 args: [spenderAddress, amountToApprove],
+                chainId: TRANSACTION_CHAIN_ID
             });
 
             updateStatus(id, 'pending', { hash });

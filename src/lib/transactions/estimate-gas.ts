@@ -1,10 +1,11 @@
 // src/lib/transactions/estimate-gas.ts
 import { createPublicClient, formatEther, http } from 'viem';
 import { baseSepolia } from 'viem/chains';
+import { TRANSACTION_CHAIN_ID } from './constants';
 
 const client = createPublicClient({
     chain: baseSepolia,
-    transport: http('/api/rpc/84532'),
+    transport: http(`/api/rpc/${TRANSACTION_CHAIN_ID}`),
 });
 
 export interface GasEstimate {

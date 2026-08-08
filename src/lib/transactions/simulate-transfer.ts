@@ -1,10 +1,12 @@
 // src/lib/transactions/simulate-transfer.ts
 import { BaseError, ContractFunctionRevertedError, createPublicClient, erc20Abi, http } from 'viem';
 import { baseSepolia } from 'viem/chains';
+import { TRANSACTION_CHAIN_ID } from './constants';
+
 
 const client = createPublicClient({
     chain: baseSepolia,
-    transport: http('/api/rpc/84532'), // our own proxy — key stays server-side
+    transport: http(`/api/rpc/${TRANSACTION_CHAIN_ID}`), // our own proxy — key stays server-side
 });
 
 export interface SimulationResult {
