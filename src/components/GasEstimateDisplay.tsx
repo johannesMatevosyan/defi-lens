@@ -33,10 +33,8 @@ export function GasEstimateDisplay({ from, to, data, ethPriceUsd }: Props) {
 
     if (error) return <p className="text-sm text-red-600">{error}</p>;
     if (!estimate) return <p className="text-sm text-zinc-500">Estimating gas…</p>;
-console.log('ethPriceUsd:', ethPriceUsd);
     const usdCost = ethPriceUsd !== null ? Number(estimate.estimatedCostEth) * ethPriceUsd : null;
-console.log('Gas estimate debug:', estimate, usdCost);
-console.log('toFixed:', Number(estimate.estimatedCostEth).toFixed(6));
+
     return (
         <div className="rounded-lg border p-3 text-sm">
             <div className="flex justify-between">
