@@ -5,6 +5,8 @@ import { useToastStore } from '@/lib/stores/toast-store';
 import { useTransactionStore } from '@/lib/stores/transaction-store';
 import { TRANSACTION_CHAIN_ID } from '@/lib/transactions/constants';
 import { estimateTransferGas, type GasEstimate } from '@/lib/transactions/estimate-gas';
+import { getRecentAverageBaseFee, isGasAbnormallyHigh } from '@/lib/transactions/gas-history';
+import { getKnownContractName } from '@/lib/transactions/known-contracts';
 import { parseTransactionError } from '@/lib/transactions/parse-error';
 import { simulateErc20Transfer } from '@/lib/transactions/simulate-transfer';
 import { validateRecipientAddress } from '@/lib/transactions/validate-address';
@@ -26,6 +28,7 @@ type FormStage = 'input' | 'simulating' | 'ready' | 'sending';
 
 export function TransferForm({ tokenAddress }: TransferFormProps) {
     const { address } = useAccount();
+    const knownName = getKnownContractName(tokenAddress);
     const { writeContractAsync } = useWriteContract();
     const startTransaction = useTransactionStore((state) => state.startTransaction);
     const updateStatus = useTransactionStore((state) => state.updateStatus);
@@ -34,6 +37,7 @@ export function TransferForm({ tokenAddress }: TransferFormProps) {
     const [recipient, setRecipient] = useState('');
     const [amount, setAmount] = useState('');
     const [stage, setStage] = useState<FormStage>('input');
+    const [gasWarning, setGasWarning] = useState(false);
     const [simulationError, setSimulationError] = useState<string | null>(null);
     const [gasEstimate, setGasEstimate] = useState<GasEstimate | null>(null);
 
@@ -93,27 +97,32 @@ export function TransferForm({ tokenAddress }: TransferFormProps) {
                 return;
             }
 
-        try {
-        const transferData = encodeFunctionData({
-            abi: erc20Abi,
-            functionName: 'transfer',
-            args: [recipient as `0x${string}`, parsedAmount],
-        });
+            try {
+                const transferData = encodeFunctionData({
+                    abi: erc20Abi,
+                    functionName: 'transfer',
+                    args: [recipient as `0x${string}`, parsedAmount],
+                });
 
-        const estimate = await estimateTransferGas({
-            from: address,
-            to: tokenAddress, // the TOKEN contract itself is the "to" — that's who gets called
-            data: transferData, // now genuinely describes "transfer parsedAmount to recipient"
-        });
+                const estimate = await estimateTransferGas({
+                    from: address,
+                    to: tokenAddress,
+                    data: transferData,
+                });
 
-        if (cancelled) return;
-            setGasEstimate(estimate);
-            setStage('ready');
-        } catch {
-            if (cancelled) return;
-            setSimulationError('Could not estimate gas for this transfer');
-            setStage('input');
-        }
+                if (cancelled) return;
+                setGasEstimate(estimate);
+
+                const avgFee = await getRecentAverageBaseFee();
+
+                if (cancelled) return; // <-- new: guard again after this second await too
+                setGasWarning(isGasAbnormallyHigh(estimate.maxFeePerGas, avgFee));
+                setStage('ready');
+            } catch {
+                if (cancelled) return;
+                setSimulationError('Could not estimate gas for this transfer');
+                setStage('input');
+            }
         });
 
         return () => {
@@ -220,6 +229,15 @@ export function TransferForm({ tokenAddress }: TransferFormProps) {
                             <strong>{recipient.slice(0, 6)}...{recipient.slice(-4)}</strong>.
                         </p>
                     </div>
+
+                    {knownName ? (
+                        <p className="text-sm text-green-700">✓ Verified contract: {knownName}</p>
+                        ) : (
+                        <p className="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded p-2">
+                            ⚠️ This contract isn't on your known-contracts list. Double-check the address before proceeding.
+                        </p>
+                    )}
+
                     <GasEstimateDisplay
                         from={address!}
                         to={tokenAddress}
@@ -237,6 +255,12 @@ export function TransferForm({ tokenAddress }: TransferFormProps) {
                     >
                         Confirm Transfer
                     </button>
+
+                    {gasWarning && (
+                        <p className="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded p-2">
+                            ⚠️ Gas price is unusually high right now — more than double the recent average. You can still proceed, or wait and try again later.
+                        </p>
+                    )}
                 </>
             )}
 
