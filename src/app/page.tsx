@@ -1,14 +1,17 @@
 // src/app/page.tsx
-import { AssetAllocationChart } from '@/components/AssetAllocationChart';
-import { ChainBreakdownSection } from '@/components/ChainBreakdownSection';
-import { ChainFilterTabs } from '@/components/ChainFilterTabs';
-import { DefiTvlHistoryChart } from '@/components/DefiTvlHistoryChart';
-import { ErrorBoundary } from '@/components/ErrorBoundary';
-import { PortfolioHistoryChart } from '@/components/PortfolioHistoryChart';
-import { PortfolioList } from '@/components/PortfolioList';
-import { ProtocolTvlChart } from '@/components/ProtocolTvlChart';
-import { SwapHistoryList } from '@/components/SwapHistoryList';
-import { TransferForm } from '@/components/TransferForm';
+// import { AssetAllocationChart } from '@/components/AssetAllocationChart';
+// import { ChainBreakdownSection } from '@/components/ChainBreakdownSection';
+// import { ChainFilterTabs } from '@/components/ChainFilterTabs';
+// import { DefiTvlHistoryChart } from '@/components/DefiTvlHistoryChart';
+// import { ErrorBoundary } from '@/components/ErrorBoundary';
+// import { PortfolioHistoryChart } from '@/components/PortfolioHistoryChart';
+// import { PortfolioList } from '@/components/PortfolioList';
+// import { ProtocolTvlChart } from '@/components/ProtocolTvlChart';
+// import { SwapHistoryList } from '@/components/SwapHistoryList';
+// import { TransferForm } from '@/components/TransferForm';
+
+
+/*
 export default function Home() {
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
@@ -52,4 +55,10 @@ export default function Home() {
       </main>
     </div>
   );
+}
+*/
+
+import { redirect } from 'next/navigation';
+export default function Home() {
+  redirect('/portfolio');
 }
