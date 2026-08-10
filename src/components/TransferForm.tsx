@@ -178,7 +178,7 @@ export function TransferForm({ tokenAddress }: TransferFormProps) {
     return (
         <div className="space-y-4 rounded-lg border p-4">
             <div>
-                <h3 className="text-lg font-semibold mb-2">My Address {address}</h3>
+                <h3 className="text-lg font-semibold mb-2">My Address</h3>
                 <label id='recipient-address' className="text-sm font-medium">Recipient address</label>
                 <input
                     id="recipient-address"

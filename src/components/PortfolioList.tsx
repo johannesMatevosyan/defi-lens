@@ -40,19 +40,19 @@ export function PortfolioList() {
         return (
         <div className="space-y-2 py-4">
             {[1, 2, 3].map((i) => (
-                <div key={i} className="h-14 animate-pulse rounded-lg bg-zinc-100 dark:bg-zinc-800" />
+                <div key={i} className="h-14 animate-pulse rounded-lg bg-white/5" />
             ))}
         </div>
         );
     }
 
     if (visibleTokens.length === 0) {
-        return <p className="py-4 text-sm text-zinc-500">No tokens found for this wallet.</p>;
+        return <p className="py-4 text-sm text-zinc-400">No tokens found for this wallet.</p>;
     }
 
     return (
         <div className="py-4">
-            <div className="mb-4 text-2xl font-semibold">
+            <div className="mb-4 font-mono text-2xl font-semibold text-zinc-100">
                 ${displayTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </div>
 
@@ -63,24 +63,24 @@ export function PortfolioList() {
                 return (
                     <div
                         key={`${token.chainId}-${token.contractAddress}`}
-                        className="flex items-center justify-between rounded-lg px-3 py-2 hover:bg-zinc-50 dark:hover:bg-zinc-900"
+                        className="flex items-center justify-between rounded-lg px-3 py-2 hover:bg-white/5"
                     >
                         <div>
-                            <div className="font-medium">
+                            <div className="font-mono font-medium">
                                 {token.symbol}
                                 {selectedChain === 'all' && (
-                                    <span className="ml-2 rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-500 dark:bg-zinc-800">
+                                    <span className="ml-2 rounded-full bg-white/10 px-2 py-0.5 text-xs text-zinc-400">
                                         {CHAIN_LABELS[token.chainId]}
                                     </span>
                                 )}
                             </div>
-                            <div className="text-sm text-zinc-500">{token.name}</div>
+                            <div className="text-sm text-zinc-400">{token.name}</div>
                         </div>
                         <div className="text-right">
-                            <div className="font-medium">
+                            <div className="font-mono font-medium">
                                 {Number(formattedBalance).toLocaleString(undefined, { maximumFractionDigits: 4 })}
                             </div>
-                            <div className="text-sm text-zinc-500">
+                            <div className="text-sm text-zinc-400">
                                 {token.usdValue !== null ? `$${token.usdValue.toFixed(2)}` : 'Price unavailable'}
                             </div>
                         </div>
