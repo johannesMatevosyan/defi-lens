@@ -18,6 +18,10 @@ export async function getRecentAverageBaseFee(): Promise<bigint> {
 
     const fees = feeHistory.baseFeePerGas.filter((fee) => fee !== undefined) as bigint[];
     const sum = fees.reduce((total, fee) => total + fee, BigInt(0));
+
+    if (fees.length === 0) {
+        throw new Error('No base fee data available — RPC may be having issues');
+    }
     return sum / BigInt(fees.length);
 }
 
