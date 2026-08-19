@@ -223,7 +223,7 @@ export function TransferForm({ tokenAddress }: TransferFormProps) {
 
             {stage === 'ready' && gasEstimate && (
                 <>
-                    <div className="rounded-lg bg-zinc-50 p-3 text-sm dark:bg-zinc-900">
+                    <div className="rounded bg-blue-800 p-3 text-sm dark:bg-zinc-900">
                         <p>
                             You're about to send <strong>{amount} {TOKEN_SYMBOL}</strong> to{' '}
                             <strong>{recipient.slice(0, 6)}...{recipient.slice(-4)}</strong>.
@@ -251,7 +251,7 @@ export function TransferForm({ tokenAddress }: TransferFormProps) {
                     <button
                         onClick={handleConfirm}
                         disabled={stage !== 'ready'}
-                        className="w-full rounded bg-black px-4 py-2 text-sm text-white disabled:opacity-50"
+                        className="w-full rounded bg-black hover:bg-zinc-800 px-4 py-2 text-sm text-white disabled:opacity-50 cursor-pointer"
                     >
                         Confirm Transfer
                     </button>

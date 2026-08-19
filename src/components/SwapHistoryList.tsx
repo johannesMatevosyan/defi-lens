@@ -15,14 +15,14 @@ export function SwapHistoryList() {
         return (
         <div className="space-y-2">
             {[1, 2, 3].map((i) => (
-            <div key={i} className="h-16 animate-pulse rounded-lg bg-zinc-100 dark:bg-zinc-800" />
+            <div key={i} className="h-16 animate-pulse rounded-lg bg-white/5" />
             ))}
         </div>
         );
     }
 
     if (swaps.length === 0) {
-        return <p className="text-sm text-zinc-500">No swaps found for this wallet on Base.</p>;
+        return <p className="text-sm text-zinc-400">No swaps found for this wallet on Base.</p>;
     }
 
     return (
@@ -32,23 +32,23 @@ export function SwapHistoryList() {
                 const explorerUrl = getExplorerTxUrl(8453, swap.transaction.id);
 
                 return (
-                <div key={swap.id} className="flex items-center justify-between rounded-lg border p-3">
-                    <div>
-                        <div className="text-sm font-medium">
-                            <span className="text-red-600">-{direction.gave.amount.toFixed(4)} {direction.gave.symbol}</span>
-                            {' → '}
-                            <span className="text-green-600">+{direction.received.amount.toFixed(4)} {direction.received.symbol}</span>
+                    <div key={swap.id} className="flex items-center justify-between rounded-lg border border-border p-3">
+                        <div>
+                            <div className="font-mono text-sm font-medium">
+                                <span className="text-negative">-{direction.gave.amount.toFixed(4)} {direction.gave.symbol}</span>
+                                {' → '}
+                                <span className="text-positive">+{direction.received.amount.toFixed(4)} {direction.received.symbol}</span>
+                            </div>
+                            <div className="font-mono text-xs text-zinc-400">
+                                {formatRelativeTime(swap.timestamp)} · ${Number(swap.amountUSD).toFixed(2)}
+                            </div>
                         </div>
-                        <div className="text-xs text-zinc-500">
-                            {formatRelativeTime(swap.timestamp)} · ${Number(swap.amountUSD).toFixed(2)}
-                        </div>
+                        {explorerUrl && (
+                            <a href={explorerUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-zinc-400 hover:text-zinc-200">
+                                View
+                            </a>
+                        )}
                     </div>
-                    {explorerUrl && (
-                    <a href={explorerUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 underline">
-                        View
-                    </a>
-                    )}
-                </div>
                 );
             })}
 
@@ -56,7 +56,7 @@ export function SwapHistoryList() {
                 <button
                     onClick={loadMore}
                     disabled={isLoading}
-                    className="w-full rounded border py-2 text-sm text-zinc-600"
+                    className="w-full rounded border border-border bg-white/5 py-2 text-sm text-zinc-300 hover:bg-white/10 disabled:opacity-50"
                 >
                     {isLoading ? 'Loading…' : 'Load more'}
                 </button>
