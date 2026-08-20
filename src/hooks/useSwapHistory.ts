@@ -44,11 +44,21 @@ export function useSwapHistoryPaginated(walletAddress?: string) {
     const [hasMore, setHasMore] = useState(true);
     const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-    //as soon as we know the wallet, show cached swaps immediately.
+    // Reset state immediately on wallet change, so we never show a
+    // stale wallet's swaps while the new wallet's data loads.
+    // Then load cached swaps as soon as we know the wallet, merging
+    // rather than replacing — the network fetch below may resolve
+    // first, and we don't want to stomp on fresher data.
     useEffect(() => {
+        setAllSwaps([]);
+        setHasMore(true);
+
         if (!walletAddress) return;
+
         getCachedSwaps(walletAddress).then((cached) => {
-            if (cached.length > 0) setAllSwaps(cached);
+            if (cached.length > 0) {
+                setAllSwaps((prev) => mergeSwaps(prev, cached));
+            }
         });
     }, [walletAddress]);
 
@@ -68,20 +78,22 @@ export function useSwapHistoryPaginated(walletAddress?: string) {
     // "Load more" fetches older swaps, using the oldest one we
     // currently have as the cursor, and also saves them to the cache.
     async function loadMore() {
-        if (!walletAddress || allSwaps.length === 0) return;
+        if (!walletAddress || allSwaps.length === 0 || !hasMore) return;
         setIsLoadingMore(true);
 
-        const oldestTimestamp = allSwaps[allSwaps.length - 1].timestamp;
-        const olderPage = await fetchSwapHistoryPage(walletAddress, oldestTimestamp);
+        try {
+            const oldestTimestamp = allSwaps[allSwaps.length - 1].timestamp;
+            const olderPage = await fetchSwapHistoryPage(walletAddress, oldestTimestamp);
 
-        if (olderPage.length === 0) {
-            setHasMore(false);
-        } else {
-        await saveSwaps(walletAddress, olderPage);
-            setAllSwaps((prev) => mergeSwaps(prev, olderPage));
+            if (olderPage.length === 0) {
+                setHasMore(false);
+            } else {
+                await saveSwaps(walletAddress, olderPage);
+                setAllSwaps((prev) => mergeSwaps(prev, olderPage));
+            }
+        } finally {
+            setIsLoadingMore(false);
         }
-
-        setIsLoadingMore(false);
     }
 
     return {
