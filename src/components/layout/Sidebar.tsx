@@ -17,7 +17,7 @@ export function Sidebar() {
 
     return (
         <aside id="sidebar" className="hidden w-56 flex-col border-r border-border bg-card px-3 py-6 sm:flex">
-            <div className="mb-8 px-3 text-lg font-semibold tracking-tight">DeFi Lens SIDEBAR</div>
+            <div className="mb-8 px-3 text-lg font-semibold tracking-tight">DeFi Lens</div>
             <nav className="flex flex-col gap-1">
                 {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
                     const isActive = pathname.startsWith(href);

@@ -67,7 +67,7 @@ export function SignInButton() {
                         await fetch('/api/auth/logout', { method: 'POST' });
                         await refetch();
                     }}
-                    className="text-sm text-gray-500 underline"
+                    className="text-sm text-gray-500 underline cursor-pointer hover:text-gray-700"
                 >
                     Sign out
                 </button>
@@ -79,7 +79,7 @@ export function SignInButton() {
         <button
             onClick={handleSignIn}
             disabled={status === 'signing'}
-            className="rounded bg-black px-4 py-2 text-sm text-white disabled:opacity-50"
+            className="rounded bg-black px-4 py-2 text-sm text-white disabled:opacity-50 cursor-pointer hover:bg-gray-800"
         >
             {status === 'signing' ? 'Check your wallet…' : 'Sign In'}
         </button>
