@@ -1,14 +1,19 @@
 // src/components/WalletInfo.tsx
 'use client';
+import { ChainIndicator } from '@/components/ChainIndicator';
 
 import { useAccount, useBalance, useEnsAvatar, useEnsName } from 'wagmi';
 import { mainnet } from 'wagmi/chains';
+
+interface WalletInfoProps {
+  onSwitchNetwork?: () => void;
+}
 
 function truncateAddress(address: string): string {
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
 }
 
-export function WalletInfo() {
+export function WalletInfo({ onSwitchNetwork }: WalletInfoProps) {
   const { address, chain, isConnected } = useAccount();
 
   // ENS only exists on Ethereum mainnet — resolve there explicitly,
@@ -53,18 +58,7 @@ export function WalletInfo() {
         )}
       </div>
 
-      <ChainIndicator />
+      <ChainIndicator onSwitchNetwork={onSwitchNetwork} />
     </div>
-  );
-}
-
-function ChainIndicator() {
-  const { chain } = useAccount();
-  if (!chain) return null;
-
-  return (
-    <span className="rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-600">
-      {chain.name}
-    </span>
   );
 }
