@@ -1,10 +1,10 @@
 // src/components/SwapHistoryList.tsx
 'use client';
-
 import { useSwapHistoryPaginated } from '@/hooks/useSwapHistory';
 import { getExplorerTxUrl } from '@/lib/explorer';
 import { formatRelativeTime } from '@/lib/format-relative-time';
 import { getSwapDirection } from '@/lib/swap-direction';
+import { SWAP_HISTORY_CHAIN_ID } from '@/lib/transactions/constants';
 import { useAccount } from 'wagmi';
 
 export function SwapHistoryList() {
@@ -29,7 +29,7 @@ export function SwapHistoryList() {
         <div className="space-y-2">
             {swaps.map((swap) => {
                 const direction = getSwapDirection(swap);
-                const explorerUrl = getExplorerTxUrl(8453, swap.transaction.id);
+                const explorerUrl = getExplorerTxUrl(SWAP_HISTORY_CHAIN_ID, swap.transaction.id);
 
                 return (
                     <div key={swap.id} className="flex items-center justify-between rounded-lg border border-border p-3">
@@ -44,7 +44,11 @@ export function SwapHistoryList() {
                             </div>
                         </div>
                         {explorerUrl && (
-                            <a href={explorerUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-zinc-400 hover:text-zinc-200">
+                            <a
+                                href={explorerUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-xs text-zinc-400 hover:text-zinc-200 p-1">
                                 View
                             </a>
                         )}
