@@ -161,11 +161,12 @@ fallback:
 - https://faucet.quicknode.com/base/sepolia
 - https://faucets.chain.link/base-sepolia
 
-> **Gotcha:** MetaMask's testnet network selector is a separate menu from the
-> main network dropdown at the top of the extension. Always confirm the *active*
-> network via the testnet toggle specifically before signing — the main display
-> can look correct while the wallet is actually still active on a different
-> network underneath.
+> **Gotcha:** MetaMask does not automatically display transfers of a custom,
+> unrecognized ERC-20 token in an account's Activity feed — even after a
+> successful, confirmed transaction — until that specific token has been
+> manually imported into that specific account (Manage tokens → Add a custom
+> token). A block explorer (BaseScan) always reflects real on-chain state and
+> should be treated as the source of truth over any wallet's own UI.
 
 ---
 
@@ -177,7 +178,7 @@ fallback:
 - All contract writes happen on Base Sepolia (testnet) during development — no real funds at risk while iterating on transaction/approval flows.
 - Every contract write is simulated (`simulateContract`) before being sent to the wallet for signing.
 - ERC-20 approvals present exact-vs-infinite as an explicit user choice rather than defaulting silently — the same UX pattern approval-phishing attacks rely on.
-- Every transaction-writing hook (`useBalance`, `writeContractAsync`, gas estimation) explicitly pins `chainId` rather than trusting the wallet's ambient/default network — see Interview Talking Points below for why this matters in practice, not just in theory.
+- Every transaction-writing hook (`useBalance`, `writeContractAsync`, gas estimation) explicitly pins `chainId` rather than trusting the wallet's ambient/default network.
 
 ## Known Limitations
 
@@ -187,7 +188,7 @@ fallback:
 
 ---
 
-## Interview Talking Points
+## Technical Decisions & Debugging Notes
 
 A few technical decisions from this build worth being able to speak to in depth:
 
@@ -206,17 +207,18 @@ defaults to infinite silently; the user always sees and picks the tradeoff. Both
 modes were tested live on Base Sepolia, with allowance re-verified against the
 chain after each transaction rather than assumed.
 
-**A transaction can "confirm" in the wallet without ever reaching the intended chain.**
-Diagnosed a case where `writeContractAsync` resolved successfully and MetaMask
-displayed a completed transaction, yet the transfer never appeared on Base Sepolia.
-Root cause: MetaMask's testnet network selector is separate from its main network
-display, so the wallet was silently signing on Ethereum Mainnet while every visible
-UI cue suggested Base Sepolia. Resolved by cross-verifying against the chain
-directly — `eth_getTransactionReceipt` and a raw `eth_call` to `balanceOf`,
-decoded independently — rather than trusting any single wallet UI or block
-explorer (which themselves showed inconsistent results during the investigation).
-Fixed by explicitly passing `chainId` on every write call instead of trusting
-the wallet's ambient state.
+**A wallet UI's "Activity" feed is not the same as on-chain truth.**
+A test transfer appeared to fail — the recipient's MetaMask Activity tab showed
+nothing, and the sender's Base Sepolia RPC connection had already thrown
+intermittent `eth_getBlockByNumber` errors moments earlier, making the failure
+look systemic. Cross-checked directly against BaseScan: the transaction had
+actually succeeded — the tokens genuinely moved on-chain. MetaMask simply
+doesn't display transfers of an unrecognized custom ERC-20 token in an account's
+Activity feed until that token is explicitly imported into that specific
+account; it's a wallet-UI display gap, not a chain-state problem. Reinforced the
+practice of treating a block explorer as the source of truth over any single
+wallet's UI, and confirmed the `waitForTransactionReceipt` fix below was
+correctly waiting for real on-chain confirmation, not just wallet-submission.
 
 **Optimistic confirmation is not the same as real confirmation.**
 An earlier version of the transfer flow marked transactions "confirmed" immediately
