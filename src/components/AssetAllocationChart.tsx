@@ -14,7 +14,11 @@ export function AssetAllocationChart() {
     const { allTokens, isLoading } = useMultiChainPortfolio();
 
     if (isLoading) {
-        return <div className="h-64 w-64 animate-pulse rounded-full bg-zinc-100 dark:bg-zinc-800 mx-auto" />;
+        return (
+            <div className="flex h-64 w-full items-center justify-center">
+                <div className="h-48 w-48 animate-pulse rounded-full bg-white/5" />
+            </div>
+        );
     }
 
     // Filter to the selected chain, same pattern as PortfolioList —

@@ -38,7 +38,7 @@ export function DefiTvlHistoryChart() {
     });
 
     if (isLoading) {
-        return <div className="h-80 animate-pulse rounded-lg bg-zinc-100 dark:bg-zinc-800" />;
+        return <div className="h-80 animate-pulse rounded-lg bg-white/5" />;
     }
 
     if (error || !history) {
