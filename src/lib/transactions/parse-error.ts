@@ -10,6 +10,10 @@ export function parseTransactionError(error: unknown): string {
         return 'You cancelled the transaction in your wallet.';
     }
 
+    if (message.includes('gas required exceeds allowance')) {
+        return "This transaction would need more gas than your wallet currently allows.";
+    }
+
     if (message.includes('revert')) {
         return 'This transaction would fail on-chain — nothing was sent.';
     }

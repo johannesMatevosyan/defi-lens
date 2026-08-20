@@ -70,9 +70,7 @@ export function ApprovalFlow({
         } catch (error) {
             const friendlyMessage = parseTransactionError(error);
             addToast(friendlyMessage, 'error');
-            updateStatus(id, 'failed', {
-                errorMessage: error instanceof Error ? error.message : 'Approval failed'
-            });
+            updateStatus(id, 'failed', { errorMessage: friendlyMessage });
         } finally {
             setIsApproving(false);
         }
