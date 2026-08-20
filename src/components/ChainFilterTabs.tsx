@@ -21,7 +21,7 @@ export function ChainFilterTabs() {
                     <button
                         key={value}
                         onClick={() => setSelectedChain(value)}
-                        className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+                        className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors cursor-pointer ${
                         isActive
                             ? 'bg-black text-white dark:bg-white dark:text-black'
                             : 'text-zinc-600 hover:bg-black/[.04] dark:text-zinc-400 dark:hover:bg-white/[.08]'
