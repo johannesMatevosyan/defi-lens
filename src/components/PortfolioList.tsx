@@ -56,16 +56,17 @@ export function PortfolioList() {
                 ${displayTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </div>
 
-            <div className="space-y-1">
+            <div className="max-h-[500px] space-y-1 overflow-y-auto">
                 {visibleTokens.map((token) => {
                 const formattedBalance = formatUnits(token.balance, token.decimals);
+                const displayBalance = Number(formattedBalance).toLocaleString(undefined, { maximumFractionDigits: 4 });
 
                 return (
                     <div
                         key={`${token.chainId}-${token.contractAddress}`}
-                        className="flex items-center justify-between rounded-lg px-3 py-2 hover:bg-white/5"
+                        className="flex items-center justify-between gap-3 rounded-lg px-3 py-2 hover:bg-white/5"
                     >
-                        <div>
+                        <div className="min-w-0 flex-1">
                             <div className="font-mono font-medium">
                                 {token.symbol}
                                 {selectedChain === 'all' && (
@@ -76,9 +77,12 @@ export function PortfolioList() {
                             </div>
                             <div className="text-sm text-zinc-400">{token.name}</div>
                         </div>
-                        <div className="text-right">
-                            <div className="font-mono font-medium">
-                                {Number(formattedBalance).toLocaleString(undefined, { maximumFractionDigits: 4 })}
+                        <div className="min-w-0 shrink-0 text-right">
+                            <div
+                                className="truncate font-mono font-medium max-w-[160px]"
+                                title={displayBalance}
+                            >
+                                {displayBalance}
                             </div>
                             <div className="text-sm text-zinc-400">
                                 {token.usdValue !== null ? `$${token.usdValue.toFixed(2)}` : 'Price unavailable'}
